@@ -7,6 +7,7 @@ import com.saimiral.concert_booking_system.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +21,8 @@ public class UserController {
     }
 
     @PostMapping
-    public UserResponseDTO createUser(@Valid @RequestBody UserRequestDTO dto) {
-        return service.createUser(dto);
+    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.createUser(dto));
     }
 
     @GetMapping("/{id}")
