@@ -1,6 +1,8 @@
 package com.saimiral.concert_booking_system.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,4 +27,10 @@ public class Reservation {
     @ManyToOne
     @JoinColumn(name = "concert_id")
     private Concert concert;
+
+//    public Reservation(User user, Concert concert, int numberOfSeats) {
+//        this.user.setId(user.getId());
+//        this.concert.setId(concert.getId());
+//        this.numberOfSeats = numberOfSeats;
+//    }
 }

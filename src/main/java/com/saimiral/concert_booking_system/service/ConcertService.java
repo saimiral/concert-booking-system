@@ -40,11 +40,11 @@ public class ConcertService {
     public PagedResponse<ConcertResponseDTO> getAllConcerts(Pageable pageable) {
         Page<Concert> page = concertRepository.findAll(pageable);
 
-        List<ConcertResponseDTO> concerts =
-                page.getContent()
-                    .stream()
-                        .map(concertMapper::toResponse)
-                        .toList();
+        List<ConcertResponseDTO> concerts = page
+                .getContent()
+                .stream()
+                .map(concertMapper::toResponse)
+                .toList();
 
         return new PagedResponse<>(
                 concerts,
