@@ -4,6 +4,8 @@ import com.saimiral.concert_booking_system.dto.PagedResponse;
 import com.saimiral.concert_booking_system.dto.UserRequestDTO;
 import com.saimiral.concert_booking_system.dto.UserResponseDTO;
 import com.saimiral.concert_booking_system.entity.User;
+import com.saimiral.concert_booking_system.exception.DuplicateEmailException;
+import com.saimiral.concert_booking_system.exception.UserNotFoundException;
 import com.saimiral.concert_booking_system.mapper.UserMapper;
 import com.saimiral.concert_booking_system.repository.UserRepository;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -29,21 +31,18 @@ public class UserService {
     }
 
     public UserResponseDTO createUser(UserRequestDTO dto) {
-        try {
+        if(userRepository.existsByEmail(dto.getEmail())) {
+            throw new DuplicateEmailException("Email already in use");
+        }
             User user = new User(dto.getName(), dto.getBirthDate(), dto.getEmail());
             user.setPassword(passwordEncoder.encode(dto.getPassword()));
 
-            User newUser = userRepository.save(user);
-
-            return userMapper.toResponse(newUser);
-        } catch (DataIntegrityViolationException e) {
-            throw new RuntimeException("Email already in use");
-        }
+            return userMapper.toResponse(userRepository.save(user));
     }
 
     public UserResponseDTO getUserById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         return userMapper.toResponse(user);
     }
@@ -68,7 +67,7 @@ public class UserService {
 
     public void deleteUser(Long id){
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         userRepository.delete(user);
     }
 }

@@ -7,6 +7,9 @@ import com.saimiral.concert_booking_system.entity.Concert;
 import com.saimiral.concert_booking_system.entity.Reservation;
 import com.saimiral.concert_booking_system.entity.ReservationStatus;
 import com.saimiral.concert_booking_system.entity.User;
+import com.saimiral.concert_booking_system.exception.InsufficientSeatsException;
+import com.saimiral.concert_booking_system.exception.ResourceNotFoundException;
+import com.saimiral.concert_booking_system.exception.UserNotFoundException;
 import com.saimiral.concert_booking_system.mapper.ReservationMapper;
 import com.saimiral.concert_booking_system.repository.ConcertRepository;
 import com.saimiral.concert_booking_system.repository.ReservationRepository;
@@ -36,13 +39,13 @@ public class ReservationService {
     @Transactional
     public ReservationResponseDTO createReservation(ReservationRequestDTO dto) {
         User user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         Concert concert = concertRepository.findById(dto.getConcertId())
-                .orElseThrow(() -> new RuntimeException("Concert not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Concert not found"));
 
         if(concert.getAvailableSeats() < dto.getNumberOfSeats()) {
-            throw new RuntimeException("Not enough seats available");
+            throw new InsufficientSeatsException("Not enough seats available");
         }
 
         concert.setAvailableSeats(concert.getAvailableSeats() - dto.getNumberOfSeats());
@@ -60,7 +63,7 @@ public class ReservationService {
 
     public ReservationResponseDTO getReservationById(long id) {
         Reservation reservation = reservationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Reservation not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Reservation not found"));
 
         return reservationMapper.toResponse(reservation);
     }
@@ -85,7 +88,7 @@ public class ReservationService {
 
     public void cancelReservation(Long id){
         Reservation reservation = reservationRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Reservation not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Reservation not found"));
 
         reservationRepository.delete(reservation);
     }

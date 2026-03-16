@@ -4,6 +4,7 @@ import com.saimiral.concert_booking_system.dto.ConcertRequestDTO;
 import com.saimiral.concert_booking_system.dto.ConcertResponseDTO;
 import com.saimiral.concert_booking_system.dto.PagedResponse;
 import com.saimiral.concert_booking_system.entity.Concert;
+import com.saimiral.concert_booking_system.exception.ResourceNotFoundException;
 import com.saimiral.concert_booking_system.mapper.ConcertMapper;
 import com.saimiral.concert_booking_system.repository.ConcertRepository;
 import org.springframework.data.domain.Page;
@@ -25,14 +26,12 @@ public class ConcertService {
     public ConcertResponseDTO createConcert(ConcertRequestDTO dto) {
         Concert concert = new Concert(dto.getName(), dto.getVenue(), dto.getConcertDateTime(), dto.getTotalSeats(), dto.getAvailableSeats());
 
-        Concert newConcert = concertRepository.save(concert);
-
-        return concertMapper.toResponse(newConcert);
+        return concertMapper.toResponse(concertRepository.save(concert));
     }
 
     public ConcertResponseDTO getConcertById(Long id) {
         Concert concert = concertRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Concert not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Concert not found"));
 
         return concertMapper.toResponse(concert);
     }
@@ -57,7 +56,7 @@ public class ConcertService {
 
     public void deleteConcert(Long id) {
         Concert concert = concertRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Concert not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Concert not found"));
 
         concertRepository.delete(concert);
     }
