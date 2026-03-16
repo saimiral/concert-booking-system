@@ -8,6 +8,7 @@ import com.saimiral.concert_booking_system.exception.DuplicateEmailException;
 import com.saimiral.concert_booking_system.exception.UserNotFoundException;
 import com.saimiral.concert_booking_system.mapper.UserMapper;
 import com.saimiral.concert_booking_system.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,16 +20,11 @@ import java.util.List;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
-
-    public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.userMapper = userMapper;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     public UserResponseDTO createUser(UserRequestDTO dto) {
         if(userRepository.existsByEmail(dto.getEmail())) {

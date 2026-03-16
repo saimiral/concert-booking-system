@@ -14,6 +14,7 @@ import com.saimiral.concert_booking_system.mapper.ReservationMapper;
 import com.saimiral.concert_booking_system.repository.ConcertRepository;
 import com.saimiral.concert_booking_system.repository.ReservationRepository;
 import com.saimiral.concert_booking_system.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,18 +24,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ReservationService {
     private final ReservationRepository reservationRepository;
     private final ReservationMapper reservationMapper;
     private final UserRepository userRepository;
     private final ConcertRepository concertRepository;
-
-    public ReservationService(ReservationRepository reservationRepository, ReservationMapper reservationMapper, UserRepository userRepository, ConcertRepository concertRepository) {
-        this.reservationRepository = reservationRepository;
-        this.reservationMapper = reservationMapper;
-        this.userRepository = userRepository;
-        this.concertRepository = concertRepository;
-    }
 
     @Transactional
     public ReservationResponseDTO createReservation(ReservationRequestDTO dto) {

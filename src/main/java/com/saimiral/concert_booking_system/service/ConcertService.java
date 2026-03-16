@@ -7,6 +7,7 @@ import com.saimiral.concert_booking_system.entity.Concert;
 import com.saimiral.concert_booking_system.exception.ResourceNotFoundException;
 import com.saimiral.concert_booking_system.mapper.ConcertMapper;
 import com.saimiral.concert_booking_system.repository.ConcertRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,14 +15,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ConcertService {
     private final ConcertRepository concertRepository;
     private final ConcertMapper concertMapper;
-
-    public ConcertService(ConcertRepository concertRepository, ConcertMapper concertMapper) {
-        this.concertRepository = concertRepository;
-        this.concertMapper = concertMapper;
-    }
 
     public ConcertResponseDTO createConcert(ConcertRequestDTO dto) {
         Concert concert = new Concert(dto.getName(), dto.getVenue(), dto.getConcertDateTime(), dto.getTotalSeats(), dto.getAvailableSeats());
