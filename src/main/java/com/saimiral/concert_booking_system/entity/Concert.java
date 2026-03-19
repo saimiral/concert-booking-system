@@ -21,6 +21,8 @@ public class Concert {
     private LocalDateTime concertDateTime;
     private int totalSeats;
     private int availableSeats;
+    @Version
+    private Long version;
 
     public Concert(String name, String venue, LocalDateTime concertDateTime, int totalSeats, int availableSeats) {
         this.name = name;

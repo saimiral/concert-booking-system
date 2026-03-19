@@ -17,6 +17,7 @@ import com.saimiral.concert_booking_system.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,9 +43,12 @@ public class ReservationService {
         if(concert.getAvailableSeats() < dto.getNumberOfSeats()) {
             throw new InsufficientSeatsException("Not enough seats available");
         }
-
-        concert.setAvailableSeats(concert.getAvailableSeats() - dto.getNumberOfSeats());
-        concertRepository.save(concert);
+        try{
+            concert.setAvailableSeats(concert.getAvailableSeats() - dto.getNumberOfSeats());
+            concertRepository.save(concert);
+        } catch(ObjectOptimisticLockingFailureException e){
+            throw new RuntimeException("Concert was updated by another user, please try again");
+        }
 
         Reservation reservation =  new Reservation();
         reservation.setUser(user);
