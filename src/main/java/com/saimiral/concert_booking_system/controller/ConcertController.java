@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/concerts")
+@CrossOrigin(origins = "http://localhost:3000")
 public class ConcertController {
     private final ConcertService service;
 
