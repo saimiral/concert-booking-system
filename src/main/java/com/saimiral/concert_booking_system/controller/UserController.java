@@ -3,6 +3,7 @@ package com.saimiral.concert_booking_system.controller;
 import com.saimiral.concert_booking_system.dto.PagedResponse;
 import com.saimiral.concert_booking_system.dto.UserRequestDTO;
 import com.saimiral.concert_booking_system.dto.UserResponseDTO;
+import com.saimiral.concert_booking_system.dto.UserUpdateDTO;
 import com.saimiral.concert_booking_system.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
@@ -39,5 +40,10 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable long id) {
         service.deleteUser(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable long id, @Valid @RequestBody UserUpdateDTO dto) {
+        return ResponseEntity.ok(service.updateUser(id, dto));
     }
 }

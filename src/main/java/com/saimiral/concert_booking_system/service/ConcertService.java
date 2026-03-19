@@ -2,6 +2,7 @@ package com.saimiral.concert_booking_system.service;
 
 import com.saimiral.concert_booking_system.dto.ConcertRequestDTO;
 import com.saimiral.concert_booking_system.dto.ConcertResponseDTO;
+import com.saimiral.concert_booking_system.dto.ConcertUpdateDTO;
 import com.saimiral.concert_booking_system.dto.PagedResponse;
 import com.saimiral.concert_booking_system.entity.Concert;
 import com.saimiral.concert_booking_system.exception.ResourceNotFoundException;
@@ -56,5 +57,17 @@ public class ConcertService {
                 .orElseThrow(() -> new ResourceNotFoundException("Concert not found"));
 
         concertRepository.delete(concert);
+    }
+
+    public ConcertResponseDTO updateConcert(Long id, ConcertUpdateDTO dto) {
+        Concert concert = concertRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Concert not found"));
+
+        if (dto.getName() != null) concert.setName(dto.getName());
+        if (dto.getVenue() != null) concert.setVenue(dto.getVenue());
+        if (dto.getConcertDateTime() != null) concert.setConcertDateTime(dto.getConcertDateTime());
+        if (dto.getTotalSeats() != null) concert.setTotalSeats(dto.getTotalSeats());
+
+        return concertMapper.toResponse(concertRepository.save(concert));
     }
 }

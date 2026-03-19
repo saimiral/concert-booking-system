@@ -3,6 +3,7 @@ package com.saimiral.concert_booking_system.service;
 import com.saimiral.concert_booking_system.dto.PagedResponse;
 import com.saimiral.concert_booking_system.dto.UserRequestDTO;
 import com.saimiral.concert_booking_system.dto.UserResponseDTO;
+import com.saimiral.concert_booking_system.dto.UserUpdateDTO;
 import com.saimiral.concert_booking_system.entity.User;
 import com.saimiral.concert_booking_system.exception.DuplicateEmailException;
 import com.saimiral.concert_booking_system.exception.UserNotFoundException;
@@ -65,5 +66,15 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found"));
         userRepository.delete(user);
+    }
+
+    public UserResponseDTO updateUser(Long id, UserUpdateDTO dto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        if(dto.getName() != null) user.setName(dto.getName());
+        if(dto.getBirthDate() != null) user.setBirthDate(dto.getBirthDate());
+
+        return userMapper.toResponse(userRepository.save(user));
     }
 }

@@ -2,6 +2,7 @@ package com.saimiral.concert_booking_system.controller;
 
 import com.saimiral.concert_booking_system.dto.ConcertRequestDTO;
 import com.saimiral.concert_booking_system.dto.ConcertResponseDTO;
+import com.saimiral.concert_booking_system.dto.ConcertUpdateDTO;
 import com.saimiral.concert_booking_system.dto.PagedResponse;
 import com.saimiral.concert_booking_system.service.ConcertService;
 import jakarta.validation.Valid;
@@ -24,17 +25,25 @@ public class ConcertController {
     public ResponseEntity<ConcertResponseDTO> createConcert(@Valid @RequestBody ConcertRequestDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.createConcert(dto));
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<ConcertResponseDTO> getConcertById(@PathVariable Long id){
         return ResponseEntity.ok(service.getConcertById(id));
     }
+
     @GetMapping
     public ResponseEntity<PagedResponse<ConcertResponseDTO>> getAllConcerts(@PageableDefault(size = 10, sort = "id") Pageable pageable){
         return ResponseEntity.ok(service.getAllConcerts(pageable));
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteConcert(@PathVariable Long id){
         service.deleteConcert(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ConcertResponseDTO> updateConcert(@PathVariable Long id, @Valid @RequestBody ConcertUpdateDTO dto) {
+        return ResponseEntity.ok(service.updateConcert(id, dto));
     }
 }
